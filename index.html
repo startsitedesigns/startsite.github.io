@@ -1,426 +1,621 @@
-<!--
-StartSite - Single-file HTML starter site
-Description: A luxurious, semi-luxurious, modern retail website template for "StartSite".
-Includes: responsive layout, product grid, product quick-view modal, client-side cart with localStorage persistence, sample product data, accessible markup, SEO meta tags, JSON-LD, and deployment notes.
-How to use:
-  1. Save this file as index.html and open in a browser for local preview.
-  2. Replace placeholder images in the `products` array with real image URLs and update product data.
-  3. To enable payments, connect to Stripe / Snipcart / Shopify per the comments (placeholders in code).
-  4. Deploy to GitHub Pages / Netlify / Vercel as a static site.
-
-TODOs / NOTES:
-  - Replace STRIPE_PLACEHOLDER in the checkout stub with your server-side checkout implementation.
-  - Replace sample images (unsplash links) with your own product photography.
-  - Accessibility: further ARIA labelling and testing recommended.
-  - For production, minify CSS/JS and serve images as WebP + responsive sizes.
-
-License: MIT (use & adapt freely)
--->
 <!doctype html>
 <html lang="en">
 <head>
   <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>StartSite — Luxurious Retail & Starter Websites</title>
-  <meta name="description" content="StartSite: premium retail and starter website packages. Launch your brand with luxury design and modern e-commerce — starter sites from $50." />
-  <meta property="og:title" content="StartSite — Luxurious Retail & Starter Websites" />
-  <meta property="og:description" content="StartSite: premium retail and starter website packages. Launch your brand with luxury design and modern e-commerce — starter sites from $50." />
-  <meta property="og:type" content="website" />
-  <meta name="twitter:card" content="summary_large_image" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>StartSite — Luxury · Trusted Digital Experiences</title>
 
-  <!-- JSON-LD Organization + sample product (replace with dynamic data in production) -->
-  <script type="application/ld+json">
-  {
-    "@context":"https://schema.org",
-    "@type":"Organization",
-    "name":"StartSite",
-    "url":"https://example.com",
-    "logo":"https://via.placeholder.com/300x80?text=StartSite+Logo",
-    "sameAs":[]
-  }
-  </script>
+  <!-- Fonts: Playfair Display (headings) + Inter (body) -->
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700;800&family=Playfair+Display:wght@400;600;700&display=swap" rel="stylesheet">
 
-  <!-- Google Fonts -->
-  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@600;700&family=Inter:wght@300;400;600&display=swap" rel="stylesheet">
+  <!-- Meta -->
+  <meta name="description" content="StartSite — premium web experiences combining luxury design with enterprise-grade engineering. Clear onboarding for new clients." />
 
   <style>
-    /* ---------- Base / Branding ---------- */
+    /* ====== THEME VARIABLES - edit to customize colors/spacing ====== */
     :root{
-      --gold:#D4AF37; /* gold */
-      --silver:#C0C0C0; /* silver */
-      --black:#0A0A0A; /* charcoal */
-      --muted:#F5F5F6;
-      --max-width:1200px;
-      --radius:12px;
-      --transition:240ms cubic-bezier(.2,.9,.3,1);
+      --bg: #070707;                /* deep black */
+      --panel: #0e0e10;             /* panel shade */
+      --silver: #d6d6d6;
+      --muted: #9a9a9a;
+      --gold: #bf9538;              /* refined gold */
+      --gold-2: #e7c17b;
+      --glass: rgba(255,255,255,0.03);
+      --accent: linear-gradient(90deg,var(--gold),var(--gold-2));
+      --radius: 12px;
+      --max-width: 1200px;
+      --ease: cubic-bezier(.2,.9,.2,1);
+      --focus-ring: 3px;
     }
+
+    /* ====== RESET / BASE ====== */
     *{box-sizing:border-box}
     html,body{height:100%}
     body{
       margin:0;
-      font-family:Inter,system-ui,-apple-system,"Segoe UI",Roboto,"Helvetica Neue",Arial;
-      color:var(--black);
-      background:linear-gradient(180deg,#fff 0%, #fbfbfb 100%);
+      font-family:Inter, system-ui, -apple-system, "Segoe UI", Roboto, Arial;
+      font-size:16px;
+      color:var(--silver);
+      background:
+        radial-gradient(circle at 10% 10%, rgba(255,255,255,0.02), transparent 8%),
+        linear-gradient(180deg, rgba(255,255,255,0.01), transparent 30%),
+        var(--bg);
       -webkit-font-smoothing:antialiased;
       -moz-osx-font-smoothing:grayscale;
-      line-height:1.45;
+      line-height:1.5;
     }
-    a{color:inherit}
+    a{color:inherit;text-decoration:none}
     img{max-width:100%;height:auto;display:block}
 
-    /* Container */
-    .container{max-width:var(--max-width);margin:0 auto;padding:0 20px}
+    /* ====== LAYOUT ====== */
+    .container{
+      max-width:var(--max-width);
+      margin:0 auto;
+      padding:36px 20px;
+    }
 
-    /* ---------- Header ---------- */
-    header{background:linear-gradient(90deg, rgba(10,10,10,0.02), rgba(255,255,255,0));backdrop-filter:blur(4px);position:sticky;top:0;z-index:60;border-bottom:1px solid rgba(0,0,0,0.04)}
-    .nav{display:flex;align-items:center;justify-content:space-between;padding:14px 0}
-    .logo{display:flex;align-items:center;gap:12px;font-family:'Playfair Display', serif;font-size:20px;font-weight:700;color:var(--black)}
-    .logo .mark{width:44px;height:44px;border-radius:10px;background:linear-gradient(135deg,var(--silver),var(--gold));display:flex;align-items:center;justify-content:center;color:#fff;font-weight:700}
-    nav ul{display:flex;gap:18px;align-items:center;list-style:none;padding:0;margin:0}
-    nav a{font-weight:500;text-decoration:none;color:rgba(0,0,0,0.8)}
-    .nav-actions{display:flex;gap:12px;align-items:center}
-    .icon-btn{border:none;background:transparent;padding:8px;border-radius:10px;cursor:pointer}
+    /* Skip link for keyboard users */
+    .skip-link{
+      left:8px;
+      top:8px;
+      transform:translateY(-120%);
+      position:fixed;
+      background:#fff;color:#000;padding:8px 10px;border-radius:6px;z-index:9999;
+    }
+    .skip-link:focus{ transform:none; outline: none; box-shadow: 0 0 0 var(--focus-ring) rgba(191,149,56,0.15) }
 
-    /* ---------- Hero ---------- */
-    .hero{display:grid;grid-template-columns:1fr 420px;gap:40px;align-items:center;padding:56px 0}
-    .hero-left{padding-right:8px}
-    .kicker{display:inline-block;padding:6px 10px;border-radius:999px;background:linear-gradient(90deg, rgba(212,175,55,0.08), rgba(192,192,192,0.08));font-weight:600;color:var(--black);margin-bottom:18px}
-    h1{font-family:'Playfair Display',serif;font-size:48px;margin:0 0 18px;color:var(--black);letter-spacing:-0.02em}
-    p.lead{margin:0 0 22px;color:rgba(0,0,0,0.7);font-size:18px}
-    .cta-row{display:flex;gap:12px}
-    .btn{display:inline-flex;align-items:center;gap:10px;padding:12px 18px;border-radius:12px;border:none;cursor:pointer;font-weight:600}
-    .btn-primary{background:linear-gradient(90deg,var(--black),#2b2b2b);color:#fff}
-    .btn-ghost{background:transparent;border:1px solid rgba(0,0,0,0.08);color:var(--black)}
+    /* ====== HEADER ====== */
+    header{ position:sticky; top:14px; z-index:60; backdrop-filter: blur(6px); margin-bottom:18px; }
+    .header-inner{
+      display:flex;
+      align-items:center;
+      justify-content:space-between;
+      gap:20px;
+      padding:10px 0;
+    }
+    .brand{
+      display:flex;align-items:center;gap:12px;
+    }
+    .logo{
+      width:52px;height:52px;border-radius:10px;background:linear-gradient(135deg, rgba(255,255,255,0.02), rgba(255,255,255,0.01));display:grid;place-items:center;border:1px solid rgba(255,255,255,0.03);
+      box-shadow: 0 10px 30px rgba(0,0,0,0.6);
+    }
+    .brand .title{ display:flex;flex-direction:column;line-height:1 }
+    .brand .name{ font-family:'Playfair Display', serif; font-weight:700; color:var(--gold); font-size:18px; letter-spacing:.4px }
+    .brand .tag{ font-size:12px; color:var(--muted) }
 
-    .hero-right{background:linear-gradient(180deg,rgba(0,0,0,0.02),transparent);padding:20px;border-radius:16px;box-shadow:0 6px 20px rgba(10,10,10,0.04)}
-    .feature-card{display:flex;flex-direction:column;gap:12px}
-    .feature-card h3{margin:0;font-size:18px;font-weight:700}
-    .feature-card p{margin:0;color:rgba(0,0,0,0.65)}
+    /* NAV */
+    nav{ display:flex; gap:14px; align-items:center; }
+    nav a{ padding:8px 12px; border-radius:10px; font-weight:600; color:var(--silver); font-size:14px; transition: all 180ms var(--ease) }
+    nav a:hover, nav a:focus{ color:#0b0b0b; background:var(--gold-2); transform:translateY(-3px) }
+    .cta{ padding:10px 16px; border-radius:12px; background:var(--accent); color:#0b0b0b; font-weight:700; box-shadow: 0 8px 30px rgba(191,149,56,0.12) }
 
-    /* ---------- Products ---------- */
-    .section{padding:48px 0}
-    .section .title-row{display:flex;align-items:end;justify-content:space-between;gap:12px;margin-bottom:24px}
-    .grid{display:grid;grid-template-columns:repeat(3,1fr);gap:18px}
-    .product{background:#fff;border-radius:14px;padding:14px;box-shadow:0 6px 18px rgba(10,10,10,0.04);display:flex;flex-direction:column;gap:12px}
-    .product .media{border-radius:10px;overflow:hidden}
-    .product h4{margin:0;font-size:16px}
-    .price{font-weight:700}
-    .meta{color:rgba(0,0,0,0.5);font-size:13px}
+    /* ====== HERO ====== */
+    .hero{
+      display:grid;
+      grid-template-columns: 1fr 420px;
+      gap:28px;
+      align-items:center;
+      margin:6px 0 36px;
+    }
+    .hero-card{
+      background: linear-gradient(180deg, rgba(255,255,255,0.015), rgba(255,255,255,0.008));
+      border-radius: var(--radius);
+      padding:36px;
+      border:1px solid rgba(255,255,255,0.03);
+      box-shadow: 0 30px 80px rgba(0,0,0,0.65);
+    }
+    .kicker{ display:inline-block; font-weight:700; font-size:13px; color:var(--gold); background:rgba(191,149,56,0.06); padding:6px 10px; border-radius:999px; margin-bottom:12px }
+    h1{ margin:6px 0 14px; font-family:'Playfair Display',serif; font-size:36px; color:#fff; line-height:1.05 }
+    .lead{ color:var(--silver); font-size:16px; max-width:58ch; margin-bottom:18px }
+    .hero-cta{ display:flex; gap:12px; align-items:center; flex-wrap:wrap }
 
-    /* Quick view overlay */
-    .modal{position:fixed;inset:0;background:rgba(4,4,4,0.5);display:flex;align-items:center;justify-content:center;z-index:120;opacity:0;pointer-events:none;transition:var(--transition)}
-    .modal.open{opacity:1;pointer-events:auto}
-    .modal-card{background:white;border-radius:14px;max-width:980px;width:100%;padding:18px;box-shadow:0 40px 80px rgba(10,10,10,0.25);display:grid;grid-template-columns:1fr 380px;gap:18px}
+    .btn{
+      padding:12px 16px; border-radius:10px; border:1px solid rgba(255,255,255,0.04); font-weight:700; cursor:pointer; background:transparent; color:var(--silver);
+    }
+    .btn.primary{ background:var(--accent); color:#0b0b0b; box-shadow: 0 10px 30px rgba(191,149,56,0.12) }
+    .btn.secondary{ background:transparent; border:1px solid rgba(255,255,255,0.06) }
 
-    /* Cart */
-    .cart-drawer{position:fixed;right:18px;bottom:18px;background:linear-gradient(180deg,#fff,#fbfbfb);border-radius:14px;padding:12px;box-shadow:0 10px 40px rgba(10,10,10,0.12);z-index:100}
-    .cart-btn{display:flex;gap:8px;align-items:center}
+    /* Hero microtrust: small trust row */
+    .trust-row{ display:flex; gap:10px; margin-top:16px; align-items:center; flex-wrap:wrap }
+    .badge{ display:flex; gap:8px; align-items:center; padding:8px 10px; border-radius:10px; background:rgba(255,255,255,0.02); color:var(--muted); font-size:13px; border:1px solid rgba(255,255,255,0.03) }
+    .badge svg{ width:16px;height:16px; opacity:0.9 }
+
+    /* Right panel: simplified feature/trust */
+    .feature-panel{ padding:22px; border-radius:12px; background:linear-gradient(180deg, rgba(255,255,255,0.01), rgba(255,255,255,0.008)); border:1px solid rgba(255,255,255,0.03); box-shadow:0 18px 40px rgba(0,0,0,0.6) }
+    .metric{ font-size:20px; font-weight:800; color:var(--gold); margin-bottom:6px }
+    .muted{ color:var(--muted) }
+
+    /* ====== SECTIONS ====== */
+    section{ margin-bottom:28px; }
+    .section-head{ display:flex; align-items:center; justify-content:space-between; gap:12px; margin-bottom:14px }
+    .section-head h2{ margin:0; font-family:'Playfair Display',serif; color:#fff }
+    .section-sub{ color:var(--muted); font-size:14px }
+
+    /* Services cards */
+    .cards{ display:grid; grid-template-columns: repeat(3,1fr); gap:18px; }
+    .card{ padding:18px; border-radius:12px; background:linear-gradient(180deg, rgba(255,255,255,0.012), rgba(255,255,255,0.006)); border:1px solid rgba(255,255,255,0.03); box-shadow:0 10px 30px rgba(0,0,0,0.6); transition:transform 240ms var(--ease) }
+    .card:hover{ transform:translateY(-6px) }
+    .card h3{ margin:12px 0 8px; color:#fff }
+    .card p{ margin:0; color:var(--silver) }
+
+    /* How we work - simplified steps for beginners */
+    .steps{ display:flex; gap:14px; align-items:stretch; flex-wrap:wrap }
+    .step{ flex:1; min-width:200px; background:rgba(255,255,255,0.008); padding:16px; border-radius:10px; border:1px solid rgba(255,255,255,0.03) }
+    .step .num{ background:linear-gradient(90deg,var(--gold),var(--gold-2)); color:#080808; font-weight:800; width:42px; height:42px; border-radius:9px; display:grid;place-items:center; margin-bottom:10px }
+
+    /* Testimonials / logos */
+    .trust-grid{ display:flex; gap:12px; align-items:center; flex-wrap:wrap; margin-top:10px }
+    .logo-pill{ padding:10px;border-radius:8px;background:rgba(255,255,255,0.02); border:1px solid rgba(255,255,255,0.03); color:var(--muted); font-weight:700; font-size:13px }
+
+    /* FAQ */
+    .faq{ display:grid; gap:10px; }
+    .faq-item{ background:rgba(255,255,255,0.01); padding:12px; border-radius:10px; border:1px solid rgba(255,255,255,0.03); }
+    .faq-item summary{ font-weight:700; cursor:pointer; list-style:none }
+    .faq-item p{ margin:8px 0 0; color:var(--silver) }
+
+    /* Contact form */
+    .contact-row{ display:flex; gap:12px; align-items:center; flex-wrap:wrap }
+    .input, textarea{ padding:12px 14px; border-radius:10px; border:1px solid rgba(255,255,255,0.06); background:transparent; color:var(--silver); outline:none }
+    .input:focus, textarea:focus{ box-shadow: 0 0 0 var(--focus-ring) rgba(191,149,56,0.12) }
 
     /* Footer */
-    footer{padding:36px 0;border-top:1px solid rgba(0,0,0,0.04);margin-top:28px}
-    footer .cols{display:grid;grid-template-columns:1fr 1fr 220px;gap:18px}
+    footer{ border-top:1px solid rgba(255,255,255,0.03); padding:26px 0; color:var(--muted); font-size:14px }
 
-    /* Utilities */
-    .muted{color:rgba(0,0,0,0.5)}
-    .center{display:flex;align-items:center;justify-content:center}
+    /* Accessibility: visible focus for keyboard users */
+    :focus{ outline:none }
+    :focus-visible{ box-shadow: 0 0 0 var(--focus-ring) rgba(191,149,56,0.16); border-radius:8px }
+
+    /* Reveal animation (subtle) */
+    .reveal{ opacity:0; transform:translateY(14px) scale(.997); transition: opacity 520ms var(--ease), transform 520ms var(--ease) }
+    .reveal.visible{ opacity:1; transform:none }
+
+    /* Reduced motion: remove animations */
+    @media (prefers-reduced-motion: reduce){
+      .reveal{ transition:none; opacity:1; transform:none }
+      *{ transition:none !important }
+    }
 
     /* Responsive */
-    @media (max-width:1100px){.hero{grid-template-columns:1fr 340px}.grid{grid-template-columns:repeat(2,1fr)}}
-    @media (max-width:740px){.hero{grid-template-columns:1fr;gap:24px}.hero-right{order:2}.grid{grid-template-columns:1fr}.modal-card{grid-template-columns:1fr}.nav ul{display:none}}
-
+    @media (max-width:1080px){
+      .hero{ grid-template-columns:1fr; }
+      .cards{ grid-template-columns: repeat(2,1fr); }
+    }
+    @media (max-width:720px){
+      .cards{ grid-template-columns:1fr; }
+      .header-inner{ flex-direction:column; align-items:flex-start; gap:10px }
+      h1{ font-size:28px }
+      .feature-panel{ order:2 }
+    }
   </style>
 </head>
 <body>
-  <header>
-    <div class="container nav">
-      <div class="logo">
-        <div class="mark" aria-hidden>SS</div>
-        <div>
-          <div>StartSite</div>
-          <div style="font-size:12px;color:rgba(0,0,0,0.5);font-weight:600">Luxury • Technology • Launch</div>
-        </div>
-      </div>
+  <!-- Skip link for keyboard users -->
+  <a class="skip-link" href="#main">Skip to content</a>
 
-      <nav aria-label="Main navigation">
-        <ul>
-          <li><a href="#products">Products</a></li>
-          <li><a href="#services">Services</a></li>
-          <li><a href="#pricing">Pricing</a></li>
-          <li><a href="#about">About</a></li>
-        </ul>
-      </nav>
+  <div class="container" id="page">
+    <!-- Header -->
+    <header>
+      <div class="header-inner reveal" id="header">
+        <div class="brand" aria-label="StartSite Brand">
+          <div class="logo" aria-hidden="true">
+            <!-- Simple monogram for brand identity -->
+            <svg viewBox="0 0 100 100" width="44" height="44" aria-hidden="true">
+              <defs>
+                <linearGradient id="g" x1="0" x2="1">
+                  <stop offset="0" stop-color="#bf9538"/>
+                  <stop offset="1" stop-color="#e7c17b"/>
+                </linearGradient>
+              </defs>
+              <rect width="100" height="100" rx="12" fill="rgba(255,255,255,0.01)"/>
+              <path d="M70 28c-8-6-22-6-34 2-8 5-8 14 0 18 10 5 24 4 34-4" fill="none" stroke="url(#g)" stroke-width="6" stroke-linecap="round"></path>
+              <path d="M30 72c8 6 22 6 34-2 8-5 8-14 0-18-10-5-24-4-34 4" fill="none" stroke="url(#g)" stroke-width="6" stroke-linecap="round"></path>
+            </svg>
+          </div>
 
-      <div class="nav-actions">
-        <button class="icon-btn" aria-label="Search">🔍</button>
-        <button class="icon-btn" id="cartToggle" aria-expanded="false" aria-controls="cartDrawer">🛒 <span id="cartCount">0</span></button>
-      </div>
-    </div>
-  </header>
-
-  <main class="container" id="top">
-    <!-- Hero -->
-    
-
-    <!-- Services -->
-    <section id="services" class="section">
-      <div style="display:flex;gap:18px;align-items:flex-start;flex-wrap:wrap">
-        <div style="flex:1;min-width:260px">
-          <h3>Services</h3>
-          <p class="muted">From design to deployment: complete starter packages, product photography guidance, and performance optimization.</p>
-          <ul>
-            <li>Custom starter site — $50 starter</li>
-            <li>E-commerce setup & Stripe integration</li>
-            <li>SEO & performance tuning</li>
-          </ul>
-        </div>
-        <div style="width:360px;background:linear-gradient(180deg,#fff,#fbfbfb);padding:16px;border-radius:12px;">
-          <h4 style="margin-top:0">Process</h4>
-          <ol>
-            <li>Choose a package</li>
-            <li>Share branding & product assets</li>
-            <li>Review & launch</li>
-          </ol>
-          <button class="btn btn-primary" onclick="document.getElementById('pricing').scrollIntoView({behavior:'smooth'})">Get started</button>
-        </div>
-      </div>
-    </section>
-
-    <!-- Pricing -->
-    <section id="pricing" class="section">
-      <h3>Pricing</h3>
-      <div style="display:flex;gap:12px;flex-wrap:wrap;margin-top:12px">
-        <div style="flex:1;min-width:220px;background:#fff;padding:16px;border-radius:12px;box-shadow:0 8px 20px rgba(10,10,10,0.04)">
-          <h4>Starter</h4>
-          <div style="font-size:22px;font-weight:700">$50</div>
-          <p class="muted">Landing page + product listing, basic SEO, 1-week turnaround.</p>
-        </div>
-        <div style="flex:1;min-width:220px;background:#fff;padding:16px;border-radius:12px;box-shadow:0 8px 20px rgba(10,10,10,0.04)">
-          <h4>Standard</h4>
-          <div style="font-size:22px;font-weight:700">$60</div>
-          <p class="muted">Multi-page site, product variants, payment setup guidance.</p>
-        </div>
-        <div style="flex:1;min-width:220px;background:linear-gradient(90deg,var(--silver),var(--gold));padding:16px;border-radius:12px;color:#fff;box-shadow:0 12px 30px rgba(10,10,10,0.08)">
-          <h4>Premium</h4>
-          <div style="font-size:22px;font-weight:700">$65</div>
-          <p>Custom design tweaks, priority support, analytics setup.</p>
-        </div>
-      </div>
-    </section>
-
-    <!-- About -->
-    <section id="about" class="section">
-      <h3>About StartSite</h3>
-      <p class="muted">StartSite is a boutique service crafting premium-looking online storefronts and marketing sites for small and mid-sized businesses. We combine modern design, performance best practices, and clear pricing so you can launch confidently.</p>
-    </section>
-
-  </main>
-
-  <!-- Footer -->
-  <footer>
-    <div class="container">
-      <div class="cols">
-        <div>
-          <strong>StartSite</strong>
-          <p class="muted">Luxury • Technology • Launch</p>
-        </div>
-        <div>
-          <div style="display:flex;gap:12px;">
-            <a href="#">Privacy</a>
-            <a href="#">Terms</a>
-            <a href="#">Contact</a>
+          <div class="title">
+            <div class="name">StartSite</div>
+            <div class="tag">Luxury · Trusted · Beginner-friendly</div>
           </div>
         </div>
-        <div>
-          <form id="newsletter" onsubmit="event.preventDefault();alert('Thanks — newsletter signup stub');">
-            <label for="email">Newsletter</label>
-            <div style="display:flex;gap:8px;margin-top:8px">
-              <input id="email" type="email" placeholder="you@company.com" required style="flex:1;padding:10px;border-radius:8px;border:1px solid rgba(0,0,0,0.08)" />
-              <button class="btn btn-primary">Subscribe</button>
+
+        <!-- Primary navigation -->
+        <nav aria-label="Main Navigation">
+          <a href="#services">Services</a>
+          <a href="#innovation">Innovation</a>
+          <a href="#how">How it works</a>
+          <a href="#faq">FAQ</a>
+          <a class="cta" href="#contact">Get a Consultation</a>
+        </nav>
+      </div>
+    </header>
+
+    <!-- MAIN CONTENT -->
+    <main id="main" class="reveal">
+      <!-- HERO -->
+      <section class="hero" aria-labelledby="hero-title">
+        <div class="hero-card">
+          <div class="kicker">Start with confidence</div>
+          <h1 id="hero-title">StartSite — Premium websites that feel effortless</h1>
+          <p class="lead">We design and build elegant, secure, and performant digital experiences — with a clear, step-by-step process for first-time customers. No jargon. No surprises.</p>
+
+          <!-- Primary CTA + secondary action -->
+          <div class="hero-cta" role="group" aria-label="Primary calls to action">
+            <button class="btn primary" onclick="scrollTo('contact')">Request a Consultation</button>
+            <button class="btn secondary" onclick="scrollTo('how')">How it works — 3 steps</button>
+          </div>
+
+          <!-- Trust badges & social proof (short) -->
+          <div class="trust-row" aria-hidden="true">
+            <div class="badge" title="SOC 2 compliant">
+              <!-- simple shield icon -->
+              <svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M12 1L3 5v6c0 5 3.9 9.74 9 11 5.1-1.26 9-6 9-11V5l-9-4z"></path></svg>
+              SOC2-ready
             </div>
-          </form>
-        </div>
-      </div>
-
-      <div style="margin-top:18px;color:rgba(0,0,0,0.45);font-size:13px">© StartSite — Built with care. Template v1</div>
-    </div>
-  </footer>
-
-  <!-- Cart drawer (simple) -->
-  <div id="cartDrawer" class="cart-drawer" aria-live="polite" style="display:none">
-    <div style="display:flex;align-items:center;justify-content:space-between;gap:12px">
-      <strong>Your cart</strong>
-      <button class="icon-btn" onclick="toggleCart(false)">✕</button>
-    </div>
-    <div id="cartItems" style="min-width:260px;margin-top:12px"></div>
-    <div style="margin-top:12px;display:flex;justify-content:space-between;align-items:center">
-      <div class="muted">Subtotal</div>
-      <div id="cartSubtotal" style="font-weight:700">$0.00</div>
-    </div>
-    <div style="margin-top:12px;display:flex;gap:8px">
-      <button class="btn btn-primary" style="flex:1" onclick="checkout()">Checkout</button>
-      <button class="btn btn-ghost" onclick="clearCart()">Clear</button>
-    </div>
-  </div>
-
-  <!-- Quick view modal -->
-  <div id="modal" class="modal" role="dialog" aria-modal="true" aria-hidden="true">
-    <div class="modal-card" role="document">
-      <div style="padding:8px 0">
-        <div id="modalImages" style="border-radius:10px;overflow:hidden"></div>
-        <div style="margin-top:10px;color:rgba(0,0,0,0.6)" id="modalDesc"></div>
-      </div>
-      <div style="padding:6px">
-        <div style="display:flex;justify-content:space-between;align-items:center"><h3 id="modalTitle"></h3><div id="modalPrice"></div></div>
-        <p class="muted" id="modalMeta"></p>
-        <div style="margin-top:12px;display:flex;gap:8px;align-items:center">
-          <label for="qty">Qty</label>
-          <input id="qty" type="number" min="1" value="1" style="width:72px;padding:8px;border-radius:8px;border:1px solid rgba(0,0,0,0.08)" />
-        </div>
-        <div style="margin-top:12px;display:flex;gap:8px">
-          <button class="btn btn-primary" onclick="addToCartFromModal()">Add to cart</button>
-          <button class="btn btn-ghost" onclick="closeModal()">Close</button>
-        </div>
-      </div>
-    </div>
-  </div>
-
-  <script>
-    /* ========== Sample product data ========== */
-    const products = [
-      {
-        id: 'ss-rose-gold-watch',
-        title: 'Arcus Precision Watch',
-        price: 199.00,
-        currency: 'USD',
-        images: ['https://images.unsplash.com/photo-1518544881941-5e0d5866b4c2?w=1400&q=60&auto=format&fit=crop&ixlib=rb-4.0.3&s=1b7e3d8cf0e5f8b4d7a3d6a1a2c8e6bd'],
-        description: 'A refined wristwatch combining minimalist lines with high-end finishing. Sapphire crystal and brushed metal casing.',
-        category: 'accessories',
-        stock: 12
-      },
-      {
-        id: 'ss-slim-lamp',
-        title: 'Lumen Slim Table Lamp',
-        price: 129.00,
-        currency: 'USD',
-        images: ['https://images.unsplash.com/photo-1499951360447-b19be8fe80f5?w=1400&q=60&auto=format&fit=crop&ixlib=rb-4.0.3&s=2a8c8f3f8f3b1f3b4a9a310b6ee4c20d'],
-        description: 'Sculptural table lamp with adjustable warmth and subtle metallic accents.',
-        category: 'home',
-        stock: 8
-      },
-      {
-        id: 'ss-silk-scarf',
-        title: 'Nocturne Silk Scarf',
-        price: 79.00,
-        currency: 'USD',
-        images: ['https://images.unsplash.com/photo-1503342217505-b0a15ec3261c?w=1400&q=60&auto=format&fit=crop&ixlib=rb-4.0.3&s=3fa9d3f5b5f2a8d4c6d6c3e2b1a4e9d7'],
-        description: 'Hand-finished silk scarf with subtle metallic thread accents.',
-        category: 'apparel',
-        stock: 24
-      }
-    ];
-
-    /* ========== App state ========== */
-    let cart = JSON.parse(localStorage.getItem('startsite_cart')||'{}');
-    let visibleProducts = products.slice();
-    let page = 1;
-
-    /* ========== Utilities ========== */
-    function formatMoney(n){return new Intl.NumberFormat('en-US',{style:'currency',currency:'USD'}).format(n)}
-
-    /* ========== Render products ========== */
-    function renderProducts(){
-      const grid = document.getElementById('productGrid');
-      grid.innerHTML='';
-      const sort = document.getElementById('sort')?.value || 'featured';
-      let list = products.slice();
-      if(sort==='price-asc') list.sort((a,b)=>a.price-b.price);
-      if(sort==='price-desc') list.sort((a,b)=>b.price-a.price);
-      // simple pagination (page * 3)
-      const perPage = 6;
-      const shown = list.slice(0,page*perPage);
-      shown.forEach(p=>{
-        const el = document.createElement('article');
-        el.className='product';
-        el.setAttribute('role','listitem');
-        el.innerHTML = `
-          <div class="media" style="height:220px;background:#f6f6f7;display:flex;align-items:center;justify-content:center">
-            <img src="${p.images[0]}" alt="${p.title}" style="object-fit:cover;height:100%;width:100%" />
+            <div class="badge" title="High client satisfaction">⭐ 4.9 / 5 client rating</div>
+            <div class="badge" title="NDA & privacy-first">Privacy-first • NDA available</div>
           </div>
-          <div>
-            <h4>${p.title}</h4>
-            <div class="meta">${p.category} • ${p.stock>0? 'In stock':'Sold out'}</div>
-            <div style="display:flex;justify-content:space-between;align-items:center;margin-top:8px">
-              <div class="price">${formatMoney(p.price)}</div>
-              <div style="display:flex;gap:8px">
-                <button class="btn btn-ghost" onclick="openModal('${p.id}')">Quick view</button>
-                <button class="btn btn-primary" onclick="addToCart('${p.id}')">Add</button>
+        </div>
+
+        <!-- Right panel: clear stats and next steps for beginners -->
+        <aside class="feature-panel" aria-labelledby="feature-title">
+          <div id="feature-title" class="metric">Trusted by brands</div>
+          <div class="muted">We partner with a focused set of clients to ensure quality.</div>
+
+          <div style="margin-top:14px">
+            <div style="display:flex;gap:10px;">
+              <div style="flex:1">
+                <div class="muted">Avg. Launch</div>
+                <div style="font-weight:700;color:var(--silver)">8–12 weeks</div>
+              </div>
+              <div style="flex:1">
+                <div class="muted">Satisfaction</div>
+                <div style="font-weight:700;color:var(--silver)">NPS 92</div>
               </div>
             </div>
           </div>
-        `;
-        grid.appendChild(el);
-      });
-      updateCartCount();
+
+          <div style="margin-top:14px">
+            <div class="muted">Beginner-friendly</div>
+            <div style="font-size:13px;color:var(--silver);margin-top:6px">No technical setup required — we guide you every step of the way.</div>
+          </div>
+        </aside>
+      </section>
+
+      <!-- SERVICES -->
+      <section id="services" class="reveal" aria-labelledby="services-title">
+        <div class="section-head">
+          <div>
+            <div class="kicker">Services</div>
+            <h2 id="services-title">What we offer</h2>
+            <div class="section-sub">Clear service packages with transparent scope and pricing guidance.</div>
+          </div>
+        </div>
+
+        <div class="cards" role="list">
+          <!-- Each card has a short summary and a "Beginner friendly" hint -->
+          <article class="card" role="listitem" aria-labelledby="svc-1-title">
+            <div class="micro muted">Design</div>
+            <h3 id="svc-1-title">Brand & Visual System</h3>
+            <p>Elegant identity, style systems, and UI that keeps your brand consistent across channels.</p>
+            <div style="margin-top:12px" class="muted">Perfect for teams starting from scratch — we provide templates and onboarding.</div>
+          </article>
+
+          <article class="card" role="listitem" aria-labelledby="svc-2-title">
+            <div class="micro muted">Engineering</div>
+            <h3 id="svc-2-title">Web Platform & Hosting</h3>
+            <p>Performance-first websites, secure deployments, and maintenance plans so you don't manage infrastructure.</p>
+            <div style="margin-top:12px" class="muted">We handle DNS, hosting and security — you get a handover guide.</div>
+          </article>
+
+          <article class="card" role="listitem" aria-labelledby="svc-3-title">
+            <div class="micro muted">Growth</div>
+            <h3 id="svc-3-title">Analytics & Optimization</h3>
+            <p>Privacy-respecting analytics, conversion optimization, and measurable growth plans tailored to your goals.</p>
+            <div style="margin-top:12px" class="muted">Starter dashboards and monthly check-ins included.</div>
+          </article>
+        </div>
+      </section>
+
+      <!-- INNOVATION -->
+      <section id="innovation" class="reveal" aria-labelledby="innovation-title">
+        <div class="section-head">
+          <div>
+            <div class="kicker">Innovation</div>
+            <h2 id="innovation-title">Modern tech, responsibly applied</h2>
+            <div class="section-sub">We combine best-practice architecture with accessible product decisions.</div>
+          </div>
+        </div>
+
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:18px;align-items:start">
+          <div>
+            <p class="muted">From composable platforms to discrete AI enhancements, our solutions prioritize reliability, privacy, and maintainability.</p>
+            <ul style="margin-top:12px;color:var(--silver)">
+              <li>Headless CMS & modular components</li>
+              <li>Privacy-first personalization</li>
+              <li>Automated performance & security scans</li>
+            </ul>
+
+            <div style="margin-top:14px">
+              <button class="btn primary" onclick="scrollTo('contact')">Talk about tech</button>
+            </div>
+          </div>
+
+          <!-- Visual code-like summary for clarity -->
+          <div style="background:rgba(255,255,255,0.01);padding:16px;border-radius:10px;border:1px solid rgba(255,255,255,0.03);font-family:ui-monospace, SFMono-Regular, Menlo, Monaco, 'Roboto Mono', monospace;color:var(--muted);">
+<pre style="margin:0;font-size:13px;">
+// Example stack (simplified)
+stack: [
+  "headless CMS",
+  "edge CDN",
+  "secure auth",
+  "automated backups"
+]
+goals: { performance: "fast", privacy: "high", uptime: "99.99%" }
+</pre>
+          </div>
+        </div>
+      </section>
+
+      <!-- HOW IT WORKS (Beginner friendly) -->
+      <section id="how" class="reveal" aria-labelledby="how-title">
+        <div class="section-head">
+          <div>
+            <div class="kicker">Getting started</div>
+            <h2 id="how-title">How StartSite works — three simple steps</h2>
+            <div class="section-sub">A simple, guided onboarding so non-technical founders feel confident.</div>
+          </div>
+        </div>
+
+        <div class="steps" role="list">
+          <div class="step" role="listitem" aria-labelledby="step1">
+            <div class="num">1</div>
+            <div id="step1" style="font-weight:700;color:#fff">Intro & Goals</div>
+            <div class="muted" style="margin-top:8px">We discuss goals, audience, and success metrics in a short call. Expect clear deliverables.</div>
+          </div>
+
+          <div class="step" role="listitem" aria-labelledby="step2">
+            <div class="num">2</div>
+            <div id="step2" style="font-weight:700;color:#fff">Design & Approval</div>
+            <div class="muted" style="margin-top:8px">We show design options and iterate until you're delighted — with one focused review cycle.</div>
+          </div>
+
+          <div class="step" role="listitem" aria-labelledby="step3">
+            <div class="num">3</div>
+            <div id="step3" style="font-weight:700;color:#fff">Launch & Handover</div>
+            <div class="muted" style="margin-top:8px">We launch, test with you, and deliver a friendly handover guide and optional maintenance plan.</div>
+          </div>
+        </div>
+
+        <!-- Quick reassurance -->
+        <div style="margin-top:14px" class="muted">No technical background required — we'll translate decisions into simple options and next steps.</div>
+      </section>
+
+      <!-- TRUST / CLIENTS / TESTIMONIALS -->
+      <section id="trust" class="reveal" aria-labelledby="trust-title">
+        <div class="section-head">
+          <div>
+            <div class="kicker">Trust</div>
+            <h2 id="trust-title">Proof & reassurance</h2>
+            <div class="section-sub">Small but credible signals that reduce friction for beginners.</div>
+          </div>
+        </div>
+
+        <div>
+          <div class="trust-grid" aria-hidden="false">
+            <div class="logo-pill">Enterprise</div>
+            <div class="logo-pill">Finance</div>
+            <div class="logo-pill">Retail</div>
+            <div class="logo-pill">Wellness</div>
+            <div class="logo-pill">Tech</div>
+          </div>
+
+          <!-- Short testimonials (concise, readable) -->
+          <div style="margin-top:14px;display:grid;grid-template-columns:1fr 1fr;gap:12px">
+            <blockquote style="background:rgba(255,255,255,0.01);padding:12px;border-radius:10px;border:1px solid rgba(255,255,255,0.03);color:var(--silver);">
+              <strong style="color:var(--gold);display:block;margin-bottom:6px">"Clear, calm, and fast."</strong>
+              <small class="muted">— Alex R., Founder</small>
+            </blockquote>
+
+            <blockquote style="background:rgba(255,255,255,0.01);padding:12px;border-radius:10px;border:1px solid rgba(255,255,255,0.03);color:var(--silver);">
+              <strong style="color:var(--gold);display:block;margin-bottom:6px">"We felt supported every step."</strong>
+              <small class="muted">— Priya K., Head of Marketing</small>
+            </blockquote>
+          </div>
+        </div>
+      </section>
+
+      <!-- FAQ -->
+      <section id="faq" class="reveal" aria-labelledby="faq-title">
+        <div class="section-head">
+          <div>
+            <div class="kicker">FAQ</div>
+            <h2 id="faq-title">Common questions for new clients</h2>
+            <div class="section-sub">Short answers to reduce friction and uncertainty.</div>
+          </div>
+        </div>
+
+        <div class="faq" role="list">
+          <details class="faq-item" role="listitem" open>
+            <summary>How long will my project take?</summary>
+            <p>Typical launches are 8–12 weeks depending on scope. We set a realistic timeline during the initial call.</p>
+          </details>
+
+          <details class="faq-item" role="listitem">
+            <summary>Do you handle hosting & maintenance?</summary>
+            <p>Yes — we offer hosting and optional maintenance packages so you don't manage infrastructure.</p>
+          </details>
+
+          <details class="faq-item" role="listitem">
+            <summary>Are there extra fees for revisions?</summary>
+            <p>We include one main design revision round in the standard scope. Additional requests are quoted transparently.</p>
+          </details>
+        </div>
+      </section>
+
+      <!-- CONTACT -->
+      <section id="contact" class="reveal" aria-labelledby="contact-title">
+        <div class="section-head">
+          <div>
+            <div class="kicker">Contact</div>
+            <h2 id="contact-title">Ready to get started?</h2>
+            <div class="section-sub">Book a short, no-pressure consultation. We'll answer your questions and share next steps.</div>
+          </div>
+        </div>
+
+        <!-- Accessible contact form with privacy note and inline validation -->
+        <form id="contact-form" onsubmit="handleSubmit(event)" aria-label="Contact form" style="display:flex;gap:12px;align-items:center;flex-wrap:wrap">
+          <!-- Email -->
+          <label for="email" style="display:none">Email</label>
+          <input id="email" name="email" type="email" class="input" placeholder="Your email address" required aria-required="true" />
+
+          <!-- Name (optional) -->
+          <label for="name" style="display:none">Name</label>
+          <input id="name" name="name" type="text" class="input" placeholder="Your name (optional)" />
+
+          <!-- Quick message -->
+          <label for="message" style="display:none">Message</label>
+          <input id="message" name="message" type="text" class="input" placeholder="Briefly: project type or question (optional)" />
+
+          <button type="submit" class="btn primary">Request consultation</button>
+
+          <!-- Privacy note: short and friendly -->
+          <div style="width:100%;margin-top:8px;color:var(--muted);font-size:13px">
+            We respect your privacy — email is used only to follow up. NDAs available on request.
+          </div>
+        </form>
+      </section>
+    </main>
+
+    <!-- FOOTER -->
+    <footer class="reveal" aria-labelledby="footer-title">
+      <div style="display:flex;justify-content:space-between;align-items:center;gap:10px;flex-wrap:wrap">
+        <div style="display:flex;gap:12px;align-items:center">
+          <div class="logo" style="width:44px;height:44px;border-radius:8px">
+            <svg viewBox="0 0 100 100" width="36" height="36" aria-hidden="true"><defs><linearGradient id="g2" x1="0" x2="1"><stop offset="0" stop-color="#bf9538"/><stop offset="1" stop-color="#e7c17b"/></linearGradient></defs><path d="M70 28c-8-6-22-6-34 2-8 5-8 14 0 18 10 5 24 4 34-4" fill="none" stroke="url(#g2)" stroke-width="6" stroke-linecap="round"></path></svg>
+          </div>
+          <div>
+            <div style="font-weight:700;color:var(--gold)">StartSite</div>
+            <div class="muted" style="font-size:13px">Premium websites • Trusted process</div>
+          </div>
+        </div>
+
+        <div style="display:flex;gap:12px;align-items:center">
+          <a href="#privacy" class="muted">Privacy</a>
+          <a href="#terms" class="muted">Terms</a>
+          <div class="muted">© <span id="year"></span> StartSite</div>
+        </div>
+      </div>
+    </footer>
+  </div>
+
+  <script>
+    /* ====== Helpful comments + beginner-friendly JS ======
+       This script:
+         - fills the footer year
+         - implements a small reveal-on-scroll
+         - provides a simple, safe contact form handler (local simulation)
+       For production, replace handleSubmit's simulated behavior with your server endpoint.
+    =======================================================*/
+
+    // Fill dynamic year in footer
+    document.getElementById('year').textContent = new Date().getFullYear();
+
+    // Smooth scroll helper used by CTA buttons
+    function scrollTo(id) {
+      const target = document.getElementById(id);
+      if (!target) return;
+      target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+      // For keyboard users, shift focus to the target for immediate navigation
+      setTimeout(() => { target.setAttribute('tabindex','-1'); target.focus({preventScroll:true}); }, 450);
     }
 
-    function loadMore(){page++;renderProducts();}
+    // Reveal-on-scroll: small, accessible implementation
+    (function(){
+      const prefersReduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+      if (prefersReduced) {
+        document.querySelectorAll('.reveal').forEach(el => el.classList.add('visible'));
+        return;
+      }
+      const obs = new IntersectionObserver(entries => {
+        for (const entry of entries) {
+          if (entry.isIntersecting) {
+            entry.target.classList.add('visible');
+            obs.unobserve(entry.target);
+          }
+        }
+      }, { threshold: 0.12 });
+      document.querySelectorAll('.reveal').forEach(el => obs.observe(el));
+    })();
 
-    /* ========== Cart actions ========== */
-    function saveCart(){localStorage.setItem('startsite_cart',JSON.stringify(cart));renderCart();updateCartCount();}
-    function addToCart(id, qty=1){
-      const p = products.find(x=>x.id===id); if(!p) return;
-      if(!cart[id]) cart[id] = {...p, qty:0};
-      cart[id].qty += Number(qty);
-      if(cart[id].qty > p.stock) cart[id].qty = p.stock;
-      saveCart();
-      // small confirmation
-      const prev = document.getElementById('cartToggle'); prev.animate([{transform:'scale(1)'},{transform:'scale(1.06)'}],{duration:180,fill:'forwards'});
-    }
-    function addToCartFromModal(){ const id = document.getElementById('modal').dataset.id; const qty = Number(document.getElementById('qty').value||1); addToCart(id,qty); closeModal(); }
-    function updateCartCount(){ const count = Object.values(cart).reduce((s,i)=>s+i.qty,0); document.getElementById('cartCount').textContent = count; document.getElementById('cartToggle').setAttribute('aria-label', `Cart with ${count} items`);
-      return count;
-    }
-    function renderCart(){
-      const el = document.getElementById('cartItems'); el.innerHTML='';
-      const items = Object.values(cart);
-      if(items.length===0){ el.innerHTML = '<div class="muted">Cart is empty</div>'; document.getElementById('cartSubtotal').textContent = formatMoney(0); return; }
-      let subtotal=0;
-      items.forEach(item=>{
-        subtotal += item.price * item.qty;
-        const row = document.createElement('div');
-        row.style.display='flex';row.style.justifyContent='space-between';row.style.alignItems='center';row.style.gap='8px';row.style.marginBottom='10px';
-        row.innerHTML = `<div style="flex:1"><div style="font-weight:600">${item.title}</div><div class="muted" style="font-size:13px">${formatMoney(item.price)} • x${item.qty}</div></div><div><button class="btn btn-ghost" onclick="changeQty('${item.id}', ${item.qty-1})">-</button><button class="btn btn-ghost" onclick="changeQty('${item.id}', ${item.qty+1})">+</button><button class="btn" style="margin-left:8px" onclick="removeItem('${item.id}')">Remove</button></div>`;
-        el.appendChild(row);
-      });
-      document.getElementById('cartSubtotal').textContent = formatMoney(subtotal);
-    }
-    function changeQty(id,newQty){ if(newQty<=0) { removeItem(id); return;} const p = products.find(x=>x.id===id); if(newQty>p.stock) newQty=p.stock; cart[id].qty = newQty; saveCart(); }
-    function removeItem(id){ delete cart[id]; saveCart(); }
-    function clearCart(){ cart = {}; saveCart(); }
+    // Simple email validation (client-side) and polite success message
+    function handleSubmit(event) {
+      event.preventDefault();
+      const form = event.currentTarget;
+      const email = form.email.value.trim();
+      const name = form.name.value.trim();
+      const message = form.message.value.trim();
 
-    /* ========== Checkout stub (replace with Stripe/Snipcart) ========== */
-    function checkout(){
-      // Placeholder: in production, call your server to create a Stripe Checkout Session or integrate Snipcart
-      const items = Object.values(cart).map(i=>({id:i.id,quantity:i.qty,price:i.price}));
-      if(items.length===0){ alert('Your cart is empty'); return; }
-      // Example: redirect to a hosted checkout (server-side required). For now, simulate.
-      alert('Checkout stub — items:\n' + items.map(it=>`${it.quantity} x ${it.id}`).join('\n') + '\n\nReplace this function with your payment integration (Stripe/Snipcart).');
+      // Quick, safe validation
+      if (!validateEmail(email)) {
+        showAlert('Please enter a valid email address.');
+        form.email.focus();
+        return;
+      }
+
+      // Simulate sending — replace with real API call in production
+      // Here we demonstrate good UX: immediate feedback, accessible message
+      showAlert('Thanks! Your request is received. We will email you to schedule a quick call.');
+      form.reset();
     }
 
-    /* ========== Modal (quick view) ========== */
-    function openModal(id){ const p = products.find(x=>x.id===id); if(!p) return; const m = document.getElementById('modal'); m.dataset.id = id; document.getElementById('modalTitle').textContent = p.title; document.getElementById('modalPrice').textContent = formatMoney(p.price); document.getElementById('modalMeta').textContent = p.category + ' • ' + (p.stock>0? 'In stock':'Sold out'); document.getElementById('modalDesc').textContent = p.description; document.getElementById('qty').value = 1; document.getElementById('modalImages').innerHTML = `<img src="${p.images[0]}" alt="${p.title}" style="width:100%;height:420px;object-fit:cover;border-radius:8px" />`; m.classList.add('open'); m.setAttribute('aria-hidden','false'); }
-    function closeModal(){ const m=document.getElementById('modal'); m.classList.remove('open'); m.setAttribute('aria-hidden','true'); }
+    // Basic email regex (sufficient for client-side check)
+    function validateEmail(email) {
+      return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
+    }
 
-    /* ========== Cart UI toggle ========== */
-    function toggleCart(show){ const el=document.getElementById('cartDrawer'); if(show===undefined) show = el.style.display==='none'; if(show){ el.style.display='block'; document.getElementById('cartToggle').setAttribute('aria-expanded','true'); } else { el.style.display='none'; document.getElementById('cartToggle').setAttribute('aria-expanded','false'); } renderCart(); }
-    document.getElementById('cartToggle').addEventListener('click',()=>{ toggleCart(); });
+    // Accessible alert / toast — unobtrusive and keyboard-friendly
+    function showAlert(message) {
+      // Create a live region so screen readers announce the message
+      let live = document.getElementById('live-alert');
+      if (!live) {
+        live = document.createElement('div');
+        live.id = 'live-alert';
+        live.setAttribute('aria-live','polite');
+        live.setAttribute('role','status');
+        live.style.position = 'fixed';
+        live.style.right = '18px';
+        live.style.bottom = '18px';
+        live.style.zIndex = 9999;
+        document.body.appendChild(live);
+      }
+      // Visual toast
+      const el = document.createElement('div');
+      el.textContent = message;
+      el.style.padding = '12px 16px';
+      el.style.borderRadius = '8px';
+      el.style.background = 'linear-gradient(90deg,#bf9538,#e7c17b)';
+      el.style.color = '#080808';
+      el.style.fontWeight = '700';
+      el.style.boxShadow = '0 14px 40px rgba(0,0,0,0.6)';
+      el.style.marginTop = '8px';
+      live.appendChild(el);
 
-    /* Initialize */
-    renderProducts(); renderCart();
+      // Remove after a short delay
+      setTimeout(() => { el.style.opacity = '0'; el.style.transition = 'opacity 420ms ease'; }, 3000);
+      setTimeout(() => { if (el && el.parentNode) el.parentNode.removeChild(el); }, 3600);
+    }
 
-    // Accessibility: close modal on escape
-    document.addEventListener('keydown', (e)=>{ if(e.key==='Escape'){ closeModal(); toggleCart(false); } });
-
+    // Keyboard accessibility: reveal focus style after Tab pressed
+    (function(){
+      function handleFirstTab(e) {
+        if (e.key === 'Tab') {
+          document.documentElement.classList.add('user-is-tabbing');
+          window.removeEventListener('keydown', handleFirstTab);
+        }
+      }
+      window.addEventListener('keydown', handleFirstTab);
+    })();
   </script>
 </body>
 </html>
