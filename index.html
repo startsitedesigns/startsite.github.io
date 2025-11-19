@@ -5,20 +5,18 @@
   <meta name="viewport" content="width=device-width,initial-scale=1" />
   <title>StartSite — Luxury · Trusted Digital Experiences</title>
 
-  <!-- Fonts: Playfair Display (headings) + Inter (body) -->
+  <!-- Fonts -->
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700;800&family=Playfair+Display:wght@400;600;700&display=swap" rel="stylesheet">
 
-  <!-- Meta -->
   <meta name="description" content="StartSite — premium web experiences combining luxury design with enterprise-grade engineering. Clear onboarding for new clients." />
 
   <style>
-    /* ====== THEME VARIABLES - edit to customize colors/spacing ====== */
     :root{
-      --bg: #070707;                /* deep black */
-      --panel: #0e0e10;             /* panel shade */
+      --bg: #070707;
+      --panel: #0e0e10;
       --silver: #d6d6d6;
       --muted: #9a9a9a;
-      --gold: #bf9538;              /* refined gold */
+      --gold: #bf9538;
       --gold-2: #e7c17b;
       --glass: rgba(255,255,255,0.03);
       --accent: linear-gradient(90deg,var(--gold),var(--gold-2));
@@ -27,8 +25,6 @@
       --ease: cubic-bezier(.2,.9,.2,1);
       --focus-ring: 3px;
     }
-
-    /* ====== RESET / BASE ====== */
     *{box-sizing:border-box}
     html,body{height:100%}
     body{
@@ -46,217 +42,98 @@
     }
     a{color:inherit;text-decoration:none}
     img{max-width:100%;height:auto;display:block}
-
-    /* ====== LAYOUT ====== */
-    .container{
-      max-width:var(--max-width);
-      margin:0 auto;
-      padding:36px 20px;
-    }
-
-    /* Skip link for keyboard users */
-    .skip-link{
-      left:8px;
-      top:8px;
-      transform:translateY(-120%);
-      position:fixed;
-      background:#fff;color:#000;padding:8px 10px;border-radius:6px;z-index:9999;
-    }
-    .skip-link:focus{ transform:none; outline: none; box-shadow: 0 0 0 var(--focus-ring) rgba(191,149,56,0.15) }
-
-    /* ====== HEADER ====== */
+    .container{ max-width:var(--max-width); margin:0 auto; padding:36px 20px; }
+    .skip-link{ left:8px; top:8px; transform:translateY(-120%); position:fixed; background:#fff;color:#000;padding:8px 10px;border-radius:6px;z-index:9999; }
+    .skip-link:focus{ transform:none; outline:none; box-shadow:0 0 0 var(--focus-ring) rgba(191,149,56,0.15) }
     header{ position:sticky; top:14px; z-index:60; backdrop-filter: blur(6px); margin-bottom:18px; }
-    .header-inner{
-      display:flex;
-      align-items:center;
-      justify-content:space-between;
-      gap:20px;
-      padding:10px 0;
-    }
-    .brand{
-      display:flex;align-items:center;gap:12px;
-    }
-    .logo{
-      width:52px;height:52px;border-radius:10px;background:linear-gradient(135deg, rgba(255,255,255,0.02), rgba(255,255,255,0.01));display:grid;place-items:center;border:1px solid rgba(255,255,255,0.03);
-      box-shadow: 0 10px 30px rgba(0,0,0,0.6);
-    }
+    .header-inner{ display:flex; align-items:center; justify-content:space-between; gap:20px; padding:10px 0; }
+    .brand{ display:flex;align-items:center;gap:12px; }
+    .logo{ width:52px;height:52px;border-radius:10px;background:linear-gradient(135deg, rgba(255,255,255,0.02), rgba(255,255,255,0.01));display:grid;place-items:center;border:1px solid rgba(255,255,255,0.03); box-shadow:0 10px 30px rgba(0,0,0,0.6); }
     .brand .title{ display:flex;flex-direction:column;line-height:1 }
     .brand .name{ font-family:'Playfair Display', serif; font-weight:700; color:var(--gold); font-size:18px; letter-spacing:.4px }
     .brand .tag{ font-size:12px; color:var(--muted) }
-
-    /* NAV */
     nav{ display:flex; gap:14px; align-items:center; }
     nav a{ padding:8px 12px; border-radius:10px; font-weight:600; color:var(--silver); font-size:14px; transition: all 180ms var(--ease) }
     nav a:hover, nav a:focus{ color:#0b0b0b; background:var(--gold-2); transform:translateY(-3px) }
     .cta{ padding:10px 16px; border-radius:12px; background:var(--accent); color:#0b0b0b; font-weight:700; box-shadow: 0 8px 30px rgba(191,149,56,0.12) }
 
-    /* ====== HERO ====== */
-    .hero{
-      display:grid;
-      grid-template-columns: 1fr 420px;
-      gap:28px;
-      align-items:center;
-      margin:6px 0 36px;
-    }
-    .hero-card{
-      background: linear-gradient(180deg, rgba(255,255,255,0.015), rgba(255,255,255,0.008));
-      border-radius: var(--radius);
-      padding:36px;
-      border:1px solid rgba(255,255,255,0.03);
-      box-shadow: 0 30px 80px rgba(0,0,0,0.65);
-    }
+    .hero{ display:grid; grid-template-columns: 1fr 420px; gap:28px; align-items:center; margin:6px 0 36px; }
+    .hero-card{ background: linear-gradient(180deg, rgba(255,255,255,0.015), rgba(255,255,255,0.008)); border-radius: var(--radius); padding:36px; border:1px solid rgba(255,255,255,0.03); box-shadow: 0 30px 80px rgba(0,0,0,0.65); }
     .kicker{ display:inline-block; font-weight:700; font-size:13px; color:var(--gold); background:rgba(191,149,56,0.06); padding:6px 10px; border-radius:999px; margin-bottom:12px }
     h1{ margin:6px 0 14px; font-family:'Playfair Display',serif; font-size:36px; color:#fff; line-height:1.05 }
     .lead{ color:var(--silver); font-size:16px; max-width:58ch; margin-bottom:18px }
     .hero-cta{ display:flex; gap:12px; align-items:center; flex-wrap:wrap }
 
-    .btn{
-      padding:12px 16px; border-radius:10px; border:1px solid rgba(255,255,255,0.04); font-weight:700; cursor:pointer; background:transparent; color:var(--silver);
-    }
+    .btn{ padding:12px 16px; border-radius:10px; border:1px solid rgba(255,255,255,0.04); font-weight:700; cursor:pointer; background:transparent; color:var(--silver); }
     .btn.primary{ background:var(--accent); color:#0b0b0b; box-shadow: 0 10px 30px rgba(191,149,56,0.12) }
     .btn.secondary{ background:transparent; border:1px solid rgba(255,255,255,0.06) }
 
-    /* Hero microtrust: small trust row */
     .trust-row{ display:flex; gap:10px; margin-top:16px; align-items:center; flex-wrap:wrap }
     .badge{ display:flex; gap:8px; align-items:center; padding:8px 10px; border-radius:10px; background:rgba(255,255,255,0.02); color:var(--muted); font-size:13px; border:1px solid rgba(255,255,255,0.03) }
     .badge svg{ width:16px;height:16px; opacity:0.9 }
 
-    /* Right panel: simplified feature/trust */
     .feature-panel{ padding:22px; border-radius:12px; background:linear-gradient(180deg, rgba(255,255,255,0.01), rgba(255,255,255,0.008)); border:1px solid rgba(255,255,255,0.03); box-shadow:0 18px 40px rgba(0,0,0,0.6) }
     .metric{ font-size:20px; font-weight:800; color:var(--gold); margin-bottom:6px }
     .muted{ color:var(--muted) }
 
-    /* ====== SECTIONS ====== */
     section{ margin-bottom:28px; }
     .section-head{ display:flex; align-items:center; justify-content:space-between; gap:12px; margin-bottom:14px }
     .section-head h2{ margin:0; font-family:'Playfair Display',serif; color:#fff }
     .section-sub{ color:var(--muted); font-size:14px }
 
-    /* Services cards */
     .cards{ display:grid; grid-template-columns: repeat(3,1fr); gap:18px; }
     .card{ padding:18px; border-radius:12px; background:linear-gradient(180deg, rgba(255,255,255,0.012), rgba(255,255,255,0.006)); border:1px solid rgba(255,255,255,0.03); box-shadow:0 10px 30px rgba(0,0,0,0.6); transition:transform 240ms var(--ease) }
     .card:hover{ transform:translateY(-6px) }
     .card h3{ margin:12px 0 8px; color:#fff }
     .card p{ margin:0; color:var(--silver) }
 
-    /* How we work - simplified steps for beginners */
     .steps{ display:flex; gap:14px; align-items:stretch; flex-wrap:wrap }
     .step{ flex:1; min-width:200px; background:rgba(255,255,255,0.008); padding:16px; border-radius:10px; border:1px solid rgba(255,255,255,0.03) }
     .step .num{ background:linear-gradient(90deg,var(--gold),var(--gold-2)); color:#080808; font-weight:800; width:42px; height:42px; border-radius:9px; display:grid;place-items:center; margin-bottom:10px }
 
-    /* Testimonials / logos */
     .trust-grid{ display:flex; gap:12px; align-items:center; flex-wrap:wrap; margin-top:10px }
     .logo-pill{ padding:10px;border-radius:8px;background:rgba(255,255,255,0.02); border:1px solid rgba(255,255,255,0.03); color:var(--muted); font-weight:700; font-size:13px }
 
-    /* FAQ */
     .faq{ display:grid; gap:10px; }
     .faq-item{ background:rgba(255,255,255,0.01); padding:12px; border-radius:10px; border:1px solid rgba(255,255,255,0.03); }
     .faq-item summary{ font-weight:700; cursor:pointer; list-style:none }
     .faq-item p{ margin:8px 0 0; color:var(--silver) }
 
-    /* Contact form - upgraded styling for luxury theme */
-    .contact-form {
-      display:flex;
-      flex-direction:column;
-      gap:14px;
-      width:100%;
-      background: linear-gradient(180deg, rgba(255,255,255,0.01), rgba(255,255,255,0.006));
-      padding:22px;
-      border-radius:12px;
-      border:1px solid rgba(255,255,255,0.03);
-      box-shadow: 0 18px 40px rgba(0,0,0,0.6);
-    }
-
+    .contact-form { display:flex; flex-direction:column; gap:14px; width:100%; background: linear-gradient(180deg, rgba(255,255,255,0.01), rgba(255,255,255,0.006)); padding:22px; border-radius:12px; border:1px solid rgba(255,255,255,0.03); box-shadow:0 18px 40px rgba(0,0,0,0.6); }
     .contact-row { gap:12px; align-items:center; flex-wrap:wrap; display:flex; }
-
     .contact-form label { font-weight:700; font-size:14px; color:var(--silver); margin-bottom:6px; }
     .contact-form .field { display:flex; flex-direction:column; }
-
-    .contact-form input[type="text"],
-    .contact-form input[type="email"],
-    .contact-form textarea {
-      padding:12px 14px;
-      border-radius:10px;
-      border:1px solid rgba(255,255,255,0.06);
-      background:transparent;
-      color:var(--silver);
-      font-size:15px;
-      outline:none;
-    }
-
+    .contact-form input[type="text"], .contact-form input[type="email"], .contact-form textarea { padding:12px 14px; border-radius:10px; border:1px solid rgba(255,255,255,0.06); background:transparent; color:var(--silver); font-size:15px; outline:none; }
     .contact-form textarea { min-height:110px; resize:vertical; }
-
-    .contact-form input:focus, .contact-form textarea:focus {
-      box-shadow: 0 0 0 var(--focus-ring) rgba(191,149,56,0.12);
-      border-color: rgba(191,149,56,0.4);
-    }
-
-    .contact-btn {
-      padding:12px 16px;
-      border-radius:10px;
-      border:none;
-      background: linear-gradient(90deg,var(--gold),var(--gold-2));
-      color:#080808;
-      font-weight:800;
-      font-size:16px;
-      cursor:pointer;
-      align-self:flex-start;
-      box-shadow: 0 12px 36px rgba(191,149,56,0.12);
-      transition: transform 160ms var(--ease), box-shadow 160ms var(--ease);
-    }
+    .contact-form input:focus, .contact-form textarea:focus { box-shadow: 0 0 0 var(--focus-ring) rgba(191,149,56,0.12); border-color: rgba(191,149,56,0.4); }
+    .contact-btn { padding:12px 16px; border-radius:10px; border:none; background: linear-gradient(90deg,var(--gold),var(--gold-2)); color:#080808; font-weight:800; font-size:16px; cursor:pointer; align-self:flex-start; box-shadow: 0 12px 36px rgba(191,149,56,0.12); transition: transform 160ms var(--ease), box-shadow 160ms var(--ease); }
     .contact-btn:hover{ transform: translateY(-3px); box-shadow: 0 18px 46px rgba(191,149,56,0.18); }
-
     .privacy-note { font-size:13px; color:var(--muted); margin-top:6px; }
 
-    /* Footer */
     footer{ border-top:1px solid rgba(255,255,255,0.03); padding:26px 0; color:var(--muted); font-size:14px }
-
-    /* Accessibility: visible focus for keyboard users */
     :focus{ outline:none }
     :focus-visible{ box-shadow: 0 0 0 var(--focus-ring) rgba(191,149,56,0.16); border-radius:8px }
-
-    /* Reveal animation (subtle) */
     .reveal{ opacity:0; transform:translateY(14px) scale(.997); transition: opacity 520ms var(--ease), transform 520ms var(--ease) }
     .reveal.visible{ opacity:1; transform:none }
 
-    /* Reduced motion: remove animations */
     @media (prefers-reduced-motion: reduce){
       .reveal{ transition:none; opacity:1; transform:none }
       *{ transition:none !important }
     }
-
-    /* Responsive */
-    @media (max-width:1080px){
-      .hero{ grid-template-columns:1fr; }
-      .cards{ grid-template-columns: repeat(2,1fr); }
-      .contact-form { padding:18px; }
-    }
-    @media (max-width:720px){
-      .cards{ grid-template-columns:1fr; }
-      .header-inner{ flex-direction:column; align-items:flex-start; gap:10px }
-      h1{ font-size:28px }
-      .feature-panel{ order:2 }
-    }
+    @media (max-width:1080px){ .hero{ grid-template-columns:1fr; } .cards{ grid-template-columns: repeat(2,1fr); } .contact-form { padding:18px; } }
+    @media (max-width:720px){ .cards{ grid-template-columns:1fr; } .header-inner{ flex-direction:column; align-items:flex-start; gap:10px } h1{ font-size:28px } .feature-panel{ order:2 } }
   </style>
 </head>
 <body>
-  <!-- Skip link for keyboard users -->
   <a class="skip-link" href="#main">Skip to content</a>
 
   <div class="container" id="page">
-    <!-- Header -->
     <header>
       <div class="header-inner reveal" id="header">
         <div class="brand" aria-label="StartSite Brand">
           <div class="logo" aria-hidden="true">
-            <!-- Simple monogram for brand identity -->
             <svg viewBox="0 0 100 100" width="44" height="44" aria-hidden="true">
-              <defs>
-                <linearGradient id="g" x1="0" x2="1">
-                  <stop offset="0" stop-color="#bf9538"/>
-                  <stop offset="1" stop-color="#e7c17b"/>
-                </linearGradient>
-              </defs>
+              <defs><linearGradient id="g" x1="0" x2="1"><stop offset="0" stop-color="#bf9538"/><stop offset="1" stop-color="#e7c17b"/></linearGradient></defs>
               <rect width="100" height="100" rx="12" fill="rgba(255,255,255,0.01)"/>
               <path d="M70 28c-8-6-22-6-34 2-8 5-8 14 0 18 10 5 24 4 34-4" fill="none" stroke="url(#g)" stroke-width="6" stroke-linecap="round"></path>
               <path d="M30 72c8 6 22 6 34-2 8-5 8-14 0-18-10-5-24-4-34 4" fill="none" stroke="url(#g)" stroke-width="6" stroke-linecap="round"></path>
@@ -269,7 +146,7 @@
           </div>
         </div>
 
-        <!-- Primary navigation -->
+        <!-- Nav links use regular hrefs; script below intercepts and smooth-scrolls -->
         <nav aria-label="Main Navigation">
           <a href="#services">Services</a>
           <a href="#innovation">Innovation</a>
@@ -280,25 +157,21 @@
       </div>
     </header>
 
-    <!-- MAIN CONTENT -->
     <main id="main" class="reveal">
-      <!-- HERO -->
       <section class="hero" aria-labelledby="hero-title">
         <div class="hero-card">
           <div class="kicker">Start with confidence</div>
           <h1 id="hero-title">StartSite — Premium websites that feel effortless</h1>
           <p class="lead">We design and build elegant, secure, and performant digital experiences — with a clear, step-by-step process for first-time customers. No jargon. No surprises.</p>
 
-          <!-- Primary CTA + secondary action -->
           <div class="hero-cta" role="group" aria-label="Primary calls to action">
-            <button class="btn primary" onclick="scrollTo('contact')">Request a Consultation</button>
-            <button class="btn secondary" onclick="scrollTo('how')">How it works — 3 steps</button>
+            <!-- Buttons call data-scroll attribute (script will handle) -->
+            <button class="btn primary" data-scroll="contact">Request a Consultation</button>
+            <button class="btn secondary" data-scroll="how">How it works — 3 steps</button>
           </div>
 
-          <!-- Trust badges & social proof (short) -->
           <div class="trust-row" aria-hidden="true">
             <div class="badge" title="SOC 2 compliant">
-              <!-- simple shield icon -->
               <svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M12 1L3 5v6c0 5 3.9 9.74 9 11 5.1-1.26 9-6 9-11V5l-9-4z"></path></svg>
               SOC2-ready
             </div>
@@ -307,7 +180,6 @@
           </div>
         </div>
 
-        <!-- Right panel: clear stats and next steps for beginners -->
         <aside class="feature-panel" aria-labelledby="feature-title">
           <div id="feature-title" class="metric">Trusted by brands</div>
           <div class="muted">We partner with a focused set of clients to ensure quality.</div>
@@ -332,7 +204,6 @@
         </aside>
       </section>
 
-      <!-- SERVICES -->
       <section id="services" class="reveal" aria-labelledby="services-title">
         <div class="section-head">
           <div>
@@ -343,7 +214,6 @@
         </div>
 
         <div class="cards" role="list">
-          <!-- Each card has a short summary and a "Beginner friendly" hint -->
           <article class="card" role="listitem" aria-labelledby="svc-1-title">
             <div class="micro muted">Design</div>
             <h3 id="svc-1-title">Brand & Visual System</h3>
@@ -367,7 +237,6 @@
         </div>
       </section>
 
-      <!-- INNOVATION -->
       <section id="innovation" class="reveal" aria-labelledby="innovation-title">
         <div class="section-head">
           <div>
@@ -387,11 +256,10 @@
             </ul>
 
             <div style="margin-top:14px">
-              <button class="btn primary" onclick="scrollTo('contact')">Talk about tech</button>
+              <button class="btn primary" data-scroll="contact">Talk about tech</button>
             </div>
           </div>
 
-          <!-- Visual code-like summary for clarity -->
           <div style="background:rgba(255,255,255,0.01);padding:16px;border-radius:10px;border:1px solid rgba(255,255,255,0.03);font-family:ui-monospace, SFMono-Regular, Menlo, Monaco, 'Roboto Mono', monospace;color:var(--muted);">
 <pre style="margin:0;font-size:13px;">
 // Example stack (simplified)
@@ -407,7 +275,6 @@ goals: { performance: "fast", privacy: "high", uptime: "99.99%" }
         </div>
       </section>
 
-      <!-- HOW IT WORKS (Beginner friendly) -->
       <section id="how" class="reveal" aria-labelledby="how-title">
         <div class="section-head">
           <div>
@@ -437,11 +304,9 @@ goals: { performance: "fast", privacy: "high", uptime: "99.99%" }
           </div>
         </div>
 
-        <!-- Quick reassurance -->
         <div style="margin-top:14px" class="muted">No technical background required — we'll translate decisions into simple options and next steps.</div>
       </section>
 
-      <!-- TRUST / CLIENTS / TESTIMONIALS -->
       <section id="trust" class="reveal" aria-labelledby="trust-title">
         <div class="section-head">
           <div>
@@ -460,7 +325,6 @@ goals: { performance: "fast", privacy: "high", uptime: "99.99%" }
             <div class="logo-pill">Tech</div>
           </div>
 
-          <!-- Short testimonials (concise, readable) -->
           <div style="margin-top:14px;display:grid;grid-template-columns:1fr 1fr;gap:12px">
             <blockquote style="background:rgba(255,255,255,0.01);padding:12px;border-radius:10px;border:1px solid rgba(255,255,255,0.03);color:var(--silver);">
               <strong style="color:var(--gold);display:block;margin-bottom:6px">"Clear, calm, and fast."</strong>
@@ -475,7 +339,6 @@ goals: { performance: "fast", privacy: "high", uptime: "99.99%" }
         </div>
       </section>
 
-      <!-- FAQ -->
       <section id="faq" class="reveal" aria-labelledby="faq-title">
         <div class="section-head">
           <div>
@@ -503,7 +366,6 @@ goals: { performance: "fast", privacy: "high", uptime: "99.99%" }
         </div>
       </section>
 
-      <!-- CONTACT -->
       <section id="contact" class="reveal" aria-labelledby="contact-title">
         <div class="section-head">
           <div>
@@ -513,14 +375,10 @@ goals: { performance: "fast", privacy: "high", uptime: "99.99%" }
           </div>
         </div>
 
-        <!-- Web3Forms contact form (integrated) -->
         <form action="https://api.web3forms.com/submit" method="POST" class="contact-form" novalidate>
-          <!-- Web3Forms access key -->
           <input type="hidden" name="access_key" value="0fad912e-e1e4-4917-8d47-6e0a5cb18887">
           <input type="hidden" name="subject" value="New Consultation Request - StartSite">
-          <!-- Redirect to the thank-you page after a successful submission -->
           <input type="hidden" name="redirect" value="thank-you.html">
-          <!-- Optional: disable web3forms' default captcha UI -->
           <input type="hidden" name="captcha" value="false">
 
           <div class="field">
@@ -545,7 +403,6 @@ goals: { performance: "fast", privacy: "high", uptime: "99.99%" }
       </section>
     </main>
 
-    <!-- FOOTER -->
     <footer class="reveal" aria-labelledby="footer-title">
       <div style="display:flex;justify-content:space-between;align-items:center;gap:10px;flex-wrap:wrap">
         <div style="display:flex;gap:12px;align-items:center">
@@ -568,26 +425,74 @@ goals: { performance: "fast", privacy: "high", uptime: "99.99%" }
   </div>
 
   <script>
-    /* ====== Helpful comments + beginner-friendly JS ======
-       This script:
-         - fills the footer year
-         - implements a small reveal-on-scroll
-       The contact form now submits directly to Web3Forms (no local simulation).
-    =======================================================*/
-
-    // Fill dynamic year in footer
+    // Dynamic footer year
     document.getElementById('year').textContent = new Date().getFullYear();
 
-    // Smooth scroll helper used by CTA buttons
-    function scrollTo(id) {
-      const target = document.getElementById(id);
+    /**
+     * Robust smooth scroller
+     * - name doesn't conflict with window.scrollTo
+     * - accepts an element ID or element reference
+     * - focuses the target for accessibility
+     */
+    function smoothScrollTo(targetOrId) {
+      let target = null;
+      if (!targetOrId) return;
+      if (typeof targetOrId === 'string') {
+        target = document.getElementById(targetOrId);
+      } else if (targetOrId instanceof Element) {
+        target = targetOrId;
+      }
       if (!target) return;
-      target.scrollIntoView({ behavior: 'smooth', block: 'start' });
-      // For keyboard users, shift focus to the target for immediate navigation
-      setTimeout(() => { target.setAttribute('tabindex','-1'); target.focus({preventScroll:true}); }, 450);
+
+      // Try native smooth scrolling first
+      try {
+        target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+      } catch (e) {
+        // Fallback for older browsers
+        const top = target.getBoundingClientRect().top + window.pageYOffset;
+        window.scrollTo(0, top);
+      }
+
+      // After scroll, move focus to target for keyboard/screen reader users
+      // Use a timeout to allow the smooth scroll to complete visually
+      setTimeout(() => {
+        try {
+          target.setAttribute('tabindex', '-1');
+          target.focus({ preventScroll: true });
+        } catch (e) { /* ignore */ }
+      }, 450);
     }
 
-    // Reveal-on-scroll: small, accessible implementation
+    // Intercept all same-page anchor clicks and use smoothScrollTo
+    (function wireAnchorsAndButtons() {
+      // Anchors with href="#..."
+      document.querySelectorAll('a[href^="#"]').forEach(a => {
+        const href = a.getAttribute('href');
+        if (!href || href === '#' ) return;
+        a.addEventListener('click', function (ev) {
+          // If the link points to an element on this page, prevent default and smooth scroll
+          const id = href.slice(1);
+          const el = document.getElementById(id);
+          if (el) {
+            ev.preventDefault();
+            smoothScrollTo(el);
+            // update the URL hash without jumping
+            history.replaceState(null, '', '#' + id);
+          }
+        });
+      });
+
+      // Buttons with data-scroll attribute
+      document.querySelectorAll('button[data-scroll]').forEach(btn => {
+        const dest = btn.getAttribute('data-scroll');
+        btn.addEventListener('click', (ev) => {
+          ev.preventDefault();
+          smoothScrollTo(dest);
+        });
+      });
+    })();
+
+    // Reveal-on-scroll (accessible)
     (function(){
       const prefersReduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
       if (prefersReduced) {
@@ -605,7 +510,7 @@ goals: { performance: "fast", privacy: "high", uptime: "99.99%" }
       document.querySelectorAll('.reveal').forEach(el => obs.observe(el));
     })();
 
-    // Keyboard accessibility: reveal focus style after Tab pressed
+    // Keyboard accessibility: add class once user presses Tab
     (function(){
       function handleFirstTab(e) {
         if (e.key === 'Tab') {
