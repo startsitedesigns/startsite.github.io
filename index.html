@@ -5,33 +5,31 @@
   <meta name="viewport" content="width=device-width,initial-scale=1" />
   <title>StartSite — Luxury · Trusted Digital Experiences</title>
 
-  <!-- Fonts: Playfair Display (headings) + Inter (body) -->
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700;800&family=Playfair+Display:wght@400;600;700&display=swap" rel="stylesheet">
 
-  <!-- Meta -->
-  <meta name="description" content="StartSite — premium web experiences combining luxury design with enterprise-grade engineering. Clear onboarding for new clients." />
+  <meta name="description" content="StartSite — premium web experiences combining luxury design with enterprise-grade engineering." />
 
   <style>
     :root{
-      --bg: #070707;
-      --panel: #0e0e10;
-      --silver: #d6d6d6;
-      --muted: #9a9a9a;
-      --gold: #bf9538;
-      --gold-2: #e7c17b;
-      --glass: rgba(255,255,255,0.03);
-      --accent: linear-gradient(90deg,var(--gold),var(--gold-2));
-      --radius: 12px;
-      --max-width: 1200px;
-      --ease: cubic-bezier(.2,.9,.2,1);
-      --focus-ring: 3px;
+      --bg:#070707;
+      --panel:#0e0e10;
+      --silver:#d6d6d6;
+      --muted:#9a9a9a;
+      --gold:#bf9538;
+      --gold-2:#e7c17b;
+      --glass:rgba(255,255,255,0.03);
+      --accent:linear-gradient(90deg,var(--gold),var(--gold-2));
+      --radius:12px;
+      --max-width:1200px;
+      --ease:cubic-bezier(.2,.9,.2,1);
+      --focus-ring:3px;
     }
 
     *{box-sizing:border-box}
     html,body{height:100%}
     body{
       margin:0;
-      font-family:Inter, system-ui, -apple-system, "Segoe UI", Roboto, Arial;
+      font-family:Inter,system-ui,-apple-system,"Segoe UI",Roboto,Arial;
       font-size:16px;
       color:var(--silver);
       background:
@@ -42,8 +40,8 @@
       -moz-osx-font-smoothing:grayscale;
       line-height:1.5;
     }
-    a{color:inherit;text-decoration:none}
-    img{max-width:100%;height:auto;display:block}
+
+    a{text-decoration:none;color:inherit}
 
     .container{
       max-width:var(--max-width);
@@ -51,63 +49,205 @@
       padding:36px 20px;
     }
 
-    .skip-link{
-      left:8px;
-      top:8px;
-      transform:translateY(-120%);
-      position:fixed;
-      background:#fff;color:#000;padding:8px 10px;border-radius:6px;z-index:9999;
-    }
-    .skip-link:focus{ transform:none; outline: none; box-shadow: 0 0 0 var(--focus-ring) rgba(191,149,56,0.15) }
-
-    header{ position:sticky; top:14px; z-index:60; backdrop-filter: blur(6px); margin-bottom:18px; }
-    .header-inner{
-      display:flex;
-      align-items:center;
-      justify-content:space-between;
-      gap:20px;
-      padding:10px 0;
-    }
-    .brand{
-      display:flex;align-items:center;gap:12px;
-    }
+    /* Header */
+    header{position:sticky;top:14px;z-index:60;backdrop-filter:blur(6px);margin-bottom:18px;}
+    .header-inner{display:flex;align-items:center;justify-content:space-between;padding:10px 0;}
+    .brand{display:flex;align-items:center;gap:12px}
     .logo{
-      width:52px;height:52px;border-radius:10px;background:linear-gradient(135deg, rgba(255,255,255,0.02), rgba(255,255,255,0.01));display:grid;place-items:center;border:1px solid rgba(255,255,255,0.03);
-      box-shadow: 0 10px 30px rgba(0,0,0,0.6);
+      width:52px;height:52px;border-radius:10px;
+      display:grid;place-items:center;
+      background:rgba(255,255,255,0.04);
+      border:1px solid rgba(255,255,255,0.03);
+      box-shadow:0 10px 30px rgba(0,0,0,0.6);
     }
-    .brand .title{ display:flex;flex-direction:column;line-height:1 }
-    .brand .name{ font-family:'Playfair Display', serif; font-weight:700; color:var(--gold); font-size:18px; letter-spacing:.4px }
-    .brand .tag{ font-size:12px; color:var(--muted) }
+    .brand .name{font-family:'Playfair Display',serif;font-weight:700;color:var(--gold);}
+    .brand .tag{font-size:12px;color:var(--muted);}
+    nav{display:flex;gap:14px;}
+    nav a{
+      padding:8px 12px;border-radius:10px;font-weight:600;font-size:14px;
+      transition:all 180ms var(--ease);
+    }
+    nav a:hover{color:#000;background:var(--gold-2);transform:translateY(-3px)}
+    .cta{
+      padding:10px 16px;border-radius:12px;font-weight:700;background:var(--accent);
+      color:#0b0b0b;box-shadow:0 8px 30px rgba(191,149,56,0.12);
+    }
 
-    nav{ display:flex; gap:14px; align-items:center; }
-    nav a{ padding:8px 12px; border-radius:10px; font-weight:600; color:var(--silver); font-size:14px; transition: all 180ms var(--ease) }
-    nav a:hover, nav a:focus{ color:#0b0b0b; background:var(--gold-2); transform:translateY(-3px) }
-    .cta{ padding:10px 16px; border-radius:12px; background:var(--accent); color:#0b0b0b; font-weight:700; box-shadow: 0 8px 30px rgba(191,149,56,0.12) }
-
+    /* Hero */
     .hero{
       display:grid;
-      grid-template-columns: 1fr 420px;
+      grid-template-columns:1fr 420px;
       gap:28px;
       align-items:center;
       margin:6px 0 36px;
     }
-
     .hero-card{
-      background: linear-gradient(180deg, rgba(255,255,255,0.015), rgba(255,255,255,0.008));
-      border-radius: var(--radius);
+      background:rgba(255,255,255,0.015);
+      border-radius:var(--radius);
       padding:36px;
       border:1px solid rgba(255,255,255,0.03);
-      box-shadow: 0 30px 80px rgba(0,0,0,0.65);
+      box-shadow:0 30px 80px rgba(0,0,0,0.65);
     }
+    .hero h1{
+      font-family:'Playfair Display',serif;
+      font-size:46px;font-weight:700;margin:0 0 16px;
+    }
+    .hero p{color:var(--muted);max-width:480px;margin:0 0 24px;}
 
+    /* Kicker */
     .kicker{
       display:inline-block;
-      font-weight:700;
-      font-size:13px;
-      color:var(--gold);
+      font-weight:700;font-size:13px;color:var(--gold);
       background:rgba(191,149,56,0.06);
-      padding:6px 10px;
-      border-radius:999px;
-      margin-bottom:12px;
-      cursor:default;
+      padding:6px 10px;border-radius:999px;margin-bottom:12px;
     }
+    .kicker.clickable{cursor:pointer;transition:opacity .18s, transform .18s;}
+    .kicker.clickable:hover{opacity:.85;transform:translateY(-2px)}
+
+    /* Buttons */
+    .btn{
+      padding:12px 20px;border-radius:12px;font-weight:700;border:none;
+      cursor:pointer;font-size:15px;transition:all 200ms var(--ease);
+    }
+    .btn.primary{
+      background:var(--accent);color:#0b0b0b;
+      box-shadow:0 10px 28px rgba(191,149,56,0.15);
+    }
+    .btn.primary:hover{transform:translateY(-3px)}
+    .btn.secondary{
+      background:#1a1a1a;color:var(--silver);
+      border:1px solid rgba(255,255,255,0.08);
+    }
+    .btn.secondary:hover{transform:translateY(-3px);border-color:rgba(255,255,255,0.18)}
+
+    /* Sections */
+    section{
+      margin:68px 0;padding:40px 0;
+      border-top:1px solid rgba(255,255,255,0.03);
+    }
+    section h2{
+      font-family:'Playfair Display',serif;
+      font-size:32px;margin:0 0 10px;color:#fff;
+    }
+    section p{color:var(--muted);max-width:620px;}
+
+    footer{
+      margin-top:60px;padding:30px 20px;text-align:center;
+      border-top:1px solid rgba(255,255,255,0.05);
+      color:var(--muted);font-size:14px;
+    }
+  </style>
+</head>
+
+<body>
+
+<header>
+  <div class="container header-inner">
+    <div class="brand">
+      <div class="logo">SS</div>
+      <div>
+        <div class="name">StartSite</div>
+        <div class="tag">Digital Luxury</div>
+      </div>
+    </div>
+
+    <nav>
+      <a href="#" onclick="smoothScrollTo('how')">How it works</a>
+      <a href="#" onclick="smoothScrollTo('contact')">Contact</a>
+      <a class="cta" href="#" onclick="smoothScrollTo('contact')">Request Consultation</a>
+    </nav>
+  </div>
+</header>
+
+<main id="main">
+
+  <!-- HERO -->
+  <div class="container hero">
+    <div class="hero-card">
+      <div class="kicker">Premium Websites</div>
+
+      <h1>Luxury, Trust & Performance For Your Digital Presence</h1>
+
+      <p>We build modern, elegant, high-performance websites with a frictionless onboarding experience and 24/7 support.</p>
+
+      <div style="display:flex;gap:12px;flex-wrap:wrap">
+        <button class="btn primary" onclick="smoothScrollTo('contact')">Request a Consultation</button>
+        <button class="btn secondary" onclick="smoothScrollTo('how')">How it works — 3 steps</button>
+      </div>
+    </div>
+
+    <img src="https://images.unsplash.com/photo-1522199710521-72d69614c702?auto=format&fit=crop&w=800&q=80"
+         alt="Luxury workspace" style="border-radius:14px;box-shadow:0 25px 60px rgba(0,0,0,0.55)">
+  </div>
+
+  <!-- SECTIONS -->
+  <section id="services">
+    <div class="container">
+      <div class="kicker">Services</div>
+      <h2>What We Offer</h2>
+      <p>Enterprise-grade websites, branding, automation and more.</p>
+    </div>
+  </section>
+
+  <section id="innovation">
+    <div class="container">
+      <div class="kicker">Innovation</div>
+      <h2>Modern Technology</h2>
+      <p>Cutting-edge frameworks and tools powering your business.</p>
+    </div>
+  </section>
+
+  <section id="how">
+    <div class="container">
+      <div class="kicker clickable" onclick="smoothScrollTo('how')">Getting Started</div>
+      <h2>How It Works — 3 Steps</h2>
+      <p>We guide you through a structured onboarding process.</p>
+    </div>
+  </section>
+
+  <section id="trust">
+    <div class="container">
+      <div class="kicker">Trust</div>
+      <h2>Reliability & Security</h2>
+      <p>Your project is handled with professional care.</p>
+    </div>
+  </section>
+
+  <section id="faq">
+    <div class="container">
+      <div class="kicker">FAQ</div>
+      <h2>Frequently Asked Questions</h2>
+      <p>Answers to the most common business inquiries.</p>
+    </div>
+  </section>
+
+  <section id="contact">
+    <div class="container">
+      <div class="kicker clickable" onclick="smoothScrollTo('contact')">Contact</div>
+      <h2>Request a Consultation</h2>
+      <p>We’ll get back to you shortly.</p>
+    </div>
+  </section>
+
+</main>
+
+<footer>
+  &copy; <span id="year"></span> StartSite. All rights reserved.
+</footer>
+
+<script>
+  document.getElementById("year").textContent = new Date().getFullYear();
+
+  function smoothScrollTo(id){
+    const el = document.getElementById(id);
+    if(!el) return;
+    el.scrollIntoView({ behavior:"smooth", block:"start" });
+    setTimeout(() => {
+      el.setAttribute("tabindex","-1");
+      el.focus({ preventScroll:true });
+    }, 450);
+  }
+</script>
+
+</body>
+</html>
